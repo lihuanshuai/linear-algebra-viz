@@ -42,10 +42,20 @@
         const m = appState.matrix;
         const v = appState.vecA;
         const r = appState.matVec;
-        return `M = [[${m.a.toFixed(1)}, ${m.b.toFixed(1)}], [${m.c.toFixed(1)}, ${m.d.toFixed(1)}]]\n` +
-          `M·î = (${m.a.toFixed(1)}, ${m.c.toFixed(1)})，M·ĵ = (${m.b.toFixed(1)}, ${m.d.toFixed(1)})\n` +
-          `v = ${v.x.toFixed(1)}·î + ${v.y.toFixed(1)}·ĵ = (${v.x.toFixed(1)}, ${v.y.toFixed(1)})\n` +
-          `M·v = ${v.x.toFixed(1)}·(${m.a.toFixed(1)}, ${m.c.toFixed(1)}) + ${v.y.toFixed(1)}·(${m.b.toFixed(1)}, ${m.d.toFixed(1)}) = (${r.x.toFixed(1)}, ${r.y.toFixed(1)})`;
+        const xi = { x: m.a * v.x, y: m.c * v.x };
+        const yj = { x: m.b * v.y, y: m.d * v.y };
+        return [
+          `M = [[${m.a.toFixed(1)}, ${m.b.toFixed(1)}], [${m.c.toFixed(1)}, ${m.d.toFixed(1)}]]`,
+          ``,
+          `① v = ${v.x.toFixed(1)}·î + ${v.y.toFixed(1)}·ĵ = (${v.x.toFixed(1)}, ${v.y.toFixed(1)})`,
+          ``,
+          `② M·î = (${m.a.toFixed(1)}, ${m.c.toFixed(1)})    M·ĵ = (${m.b.toFixed(1)}, ${m.d.toFixed(1)})`,
+          ``,
+          `③ x·(M·î) = ${v.x.toFixed(1)}×(${m.a.toFixed(1)}, ${m.c.toFixed(1)}) = (${xi.x.toFixed(1)}, ${xi.y.toFixed(1)})`,
+          `④ y·(M·ĵ) = ${v.y.toFixed(1)}×(${m.b.toFixed(1)}, ${m.d.toFixed(1)}) = (${yj.x.toFixed(1)}, ${yj.y.toFixed(1)})`,
+          ``,
+          `⑤ M·v = x·(M·î) + y·(M·ĵ) = (${xi.x.toFixed(1)}, ${xi.y.toFixed(1)}) + (${yj.x.toFixed(1)}, ${yj.y.toFixed(1)}) = (${r.x.toFixed(1)}, ${r.y.toFixed(1)})`,
+        ].join('\n');
       }
       case 'basis': {
         const m = appState.matrix;

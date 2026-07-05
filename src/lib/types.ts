@@ -52,7 +52,7 @@ export const modeDescriptions: Record<Mode, string> = {
   basis:
     '矩阵的列向量就是变换后的基向量。观察 î = (1,0) 和 ĵ = (0,1) 如何被矩阵改变。',
   matrix:
-    '矩阵 M 作用于向量 v 得到 Mv = x·(M·î) + y·(M·ĵ)。红色为 M·î = (a, c)，绿色为 M·ĵ = (b, d)，分别为矩阵的两列。紫色虚线表示沿变换后基向量的线性组合路径。',
+    '矩阵 M 作用于向量 v 得到 Mv = x·(M·î) + y·(M·ĵ)。动画逐步展示：① v 分解为 x·î + y·ĵ；② 基变换 î→M·î, ĵ→M·ĵ；③ x·(M·î) 为 x 分量的贡献；④ y·(M·ĵ) 为 y 分量的贡献；⑤ 两者相加得到 Mv。',
   eigen:
     '特征向量 v 满足 Mv = λv，即经过变换后方向不变（或反向），仅缩放 λ 倍。',
   determinant:
