@@ -75,6 +75,39 @@ export function drawGrid(ctx: CanvasRenderingContext2D, vp: Viewport, width: num
   }
 }
 
+/** 绘制变换后的网格线 */
+export function drawTransformedGrid(
+  ctx: CanvasRenderingContext2D,
+  m: Mat2x2,
+  vp: Viewport,
+  color: string,
+): void {
+  const range = 8;
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1;
+
+  for (let x = -range; x <= range; x++) {
+    const p1 = apply(m, { x, y: -range });
+    const p2 = apply(m, { x, y: range });
+    const px1 = worldToPixel(p1, vp);
+    const px2 = worldToPixel(p2, vp);
+    ctx.beginPath();
+    ctx.moveTo(px1.x, px1.y);
+    ctx.lineTo(px2.x, px2.y);
+    ctx.stroke();
+  }
+  for (let y = -range; y <= range; y++) {
+    const p1 = apply(m, { x: -range, y });
+    const p2 = apply(m, { x: range, y });
+    const px1 = worldToPixel(p1, vp);
+    const px2 = worldToPixel(p2, vp);
+    ctx.beginPath();
+    ctx.moveTo(px1.x, px1.y);
+    ctx.lineTo(px2.x, px2.y);
+    ctx.stroke();
+  }
+}
+
 /** 绘制坐标轴 */
 export function drawAxes(ctx: CanvasRenderingContext2D, vp: Viewport, width: number, height: number): void {
   const origin = worldToPixel({ x: 0, y: 0 }, vp);

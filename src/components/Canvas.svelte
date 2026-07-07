@@ -156,6 +156,12 @@
         const p1 = p(0), p2 = p(1);
         const mi: Vec2 = { x: appState.matrix.a, y: appState.matrix.c };
         const mj: Vec2 = { x: appState.matrix.b, y: appState.matrix.d };
+        // 变换后网格
+        const gridT = Math.min(animProgress * 2, 1);
+        if (gridT > 0 && animProgress > 0.5 / phaseCount(appState.mode)) {
+          const alpha = Math.floor(gridT * 40).toString(16).padStart(2, '0');
+          R.drawTransformedGrid(ctx, appState.matrix, vp, `#4a4a7a${alpha}`);
+        }
         R.drawDashedVector(ctx, { x: 1, y: 0 }, vp, 'rgba(239, 83, 80, 0.2)', 'î');
         R.drawDashedVector(ctx, { x: 0, y: 1 }, vp, 'rgba(102, 187, 106, 0.2)', 'ĵ');
         if (p1 > 0) R.drawVector(ctx, grow(mi, p1), vp, '#ef5350', "M·î");
@@ -170,53 +176,46 @@
         const p0 = p(0), p1 = p(1), p2 = p(2), p3 = p(3), p4 = p(4);
         const va = grow(v, p0);
 
-        // 原始基向量
         const iHat: Vec2 = { x: 1, y: 0 };
         const jHat: Vec2 = { x: 0, y: 1 };
-        // 变换后基向量 = 矩阵列
         const mi: Vec2 = { x: m.a, y: m.c };
         const mj: Vec2 = { x: m.b, y: m.d };
-        // 沿变换后基向量的贡献
         const compI: Vec2 = { x: mi.x * v.x, y: mi.y * v.x };
         const compJ: Vec2 = { x: mj.x * v.y, y: mj.y * v.y };
 
-        // 0: v 及其分量分解 v = x·î + y·ĵ
+        // 变换后网格（在 p1 阶段淡入，之后保持）
+        const gridT = Math.min(animProgress * 2, 1);
+        if (gridT > 0 && animProgress > 1 / phaseCount(appState.mode)) {
+          const alpha = Math.floor(gridT * 40).toString(16).padStart(2, '0');
+          R.drawTransformedGrid(ctx, m, vp, `#4a4a7a${alpha}`);
+        }
+
         if (p0 > 0) {
           R.drawComponents(ctx, va, vp, '#4fc3f7');
           R.drawVector(ctx, va, vp, '#4fc3f7', 'v');
         }
 
-        // 1: 原始基 → 变换后基 î→M·î, ĵ→M·ĵ
         if (p1 > 0) {
-          // 原始基（淡色虚线）
           R.drawDashedVector(ctx, iHat, vp, 'rgba(239, 83, 80, 0.15)', 'î');
           R.drawDashedVector(ctx, jHat, vp, 'rgba(102, 187, 106, 0.15)', 'ĵ');
-          // 变换后基
           R.drawVector(ctx, grow(mi, p1), vp, '#ef5350', "M·î");
           R.drawVector(ctx, grow(mj, p1), vp, '#66bb6a', "M·ĵ");
         }
 
-        // 2: x·(M·î) = (x·a, x·c)
         if (p2 > 0) {
-          const label = `x·M·î = ${v.x.toFixed(1)}·(${mi.x.toFixed(1)},${mi.y.toFixed(1)})`;
-          R.drawVector(ctx, grow(compI, p2), vp, '#ff7043', label);
+          R.drawVector(ctx, grow(compI, p2), vp, '#ff7043', `x·M·î`);
         }
 
-        // 3: y·(M·ĵ) = (y·b, y·d)
         if (p3 > 0) {
-          const label = `y·M·ĵ = ${v.y.toFixed(1)}·(${mj.x.toFixed(1)},${mj.y.toFixed(1)})`;
-          R.drawVector(ctx, grow(compJ, p3), vp, '#81c784', label);
+          R.drawVector(ctx, grow(compJ, p3), vp, '#81c784', `y·M·ĵ`);
         }
 
-        // 4: 平行四边形 x·(M·î)+y·(M·ĵ) = M·v
         if (p4 > 0) {
           const t = p4;
           const ci = grow(compI, t);
           const cj = grow(compJ, t);
-          // 平行四边形辅助线
           R.drawVectorFrom(ctx, ci, cj, vp, 'rgba(206, 147, 216, 0.25)', '');
           R.drawVectorFrom(ctx, cj, ci, vp, 'rgba(206, 147, 216, 0.25)', '');
-          // 结果
           R.drawVector(ctx, grow(mv, t), vp, '#ce93d8', 'M·v');
         }
         break;
